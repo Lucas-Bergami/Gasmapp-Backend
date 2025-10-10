@@ -50,4 +50,14 @@ public class ClientModel {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+
+    public List<EvaluationModel> getEvaluations() {
+        return evaluations;
+    }
+
+    public List<PriceModel> getPrices() {
+        return prices;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.gasmapp.gasmapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,14 +22,13 @@ public class PriceModel {
 
     @ManyToOne
     @JoinColumn(name = "fuel_id", nullable = false)
+    @JsonIgnore
     private FuelModel fuel;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
+    @JsonIgnore
     private ClientModel client;
-
-    @OneToMany(mappedBy = "price", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EvaluationModel> evaluations = new ArrayList<>();
 
     public PriceModel() {
         this.createdAt = LocalDateTime.now();
@@ -49,13 +49,4 @@ public class PriceModel {
     public ClientModel getClient() { return client; }
     public void setClient(ClientModel client) { this.client = client; }
 
-    public void addEvaluation(EvaluationModel evaluation) {
-        evaluations.add(evaluation);
-        evaluation.setPrice(this);
-    }
-
-    public void removeEvaluation(EvaluationModel evaluation) {
-        evaluations.remove(evaluation);
-        evaluation.setPrice(null);
-    }
 }

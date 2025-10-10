@@ -1,5 +1,6 @@
 package com.gasmapp.gasmapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class FuelModel {
 
     @ManyToOne
     @JoinColumn(name = "gas_station_id", nullable = false)
+    @JsonIgnore
     private GasStationModel gasStation;
 
     @OneToMany(mappedBy = "fuel", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -41,4 +43,12 @@ public class FuelModel {
 
     public GasStationModel getGasStation() { return gasStation; }
     public void setGasStation(GasStationModel gasStation) { this.gasStation = gasStation; }
+
+    public List<PriceModel> getPrices() {
+        return prices;
+    }
+
+    public void setPrices(List<PriceModel> prices) {
+        this.prices = prices;
+    }
 }

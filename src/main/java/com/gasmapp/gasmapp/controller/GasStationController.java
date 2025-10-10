@@ -65,4 +65,14 @@ public class GasStationController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/details")
+    public List<GasStationModel> getAllGasStationsWithDetails() {
+        List<GasStationModel> stations = gasStationService.getAllGasStations();
+
+        stations.forEach(station -> station.getFuels().forEach(fuel -> fuel.getPrices().size()));
+
+        return stations;
+    }
+
 }
