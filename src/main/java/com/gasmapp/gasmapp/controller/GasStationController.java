@@ -69,10 +69,37 @@ public class GasStationController {
     @GetMapping("/details")
     public List<GasStationModel> getAllGasStationsWithDetails() {
         List<GasStationModel> stations = gasStationService.getAllGasStations();
-
+        // .size garante que preços e combustíveis sejam carregados
         stations.forEach(station -> station.getFuels().forEach(fuel -> fuel.getPrices().size()));
-
         return stations;
+    }
+
+    @PostMapping("/fetch")
+    public ResponseEntity<String> fetchGasStationsFromOverpass(
+            @RequestParam double south,
+            @RequestParam double west,
+            @RequestParam double north,
+            @RequestParam double east) {
+
+        gasStationService.fetchGasStationsFromOverpass(south, west, north, east);
+        return ResponseEntity.ok("Busca concluída e postos salvos no banco de dados!");
+    }
+
+    @PostMapping("/fetch-nearby")
+    public ResponseEntity<String> fetchNearbyGasStations(
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam(defaultValue = "0.01") double delta) {
+
+
+        double south = latitude - delta;
+        double north = latitude + delta;
+        double west = longitude - delta;
+        double east = longitude + delta;
+
+        gasStationService.fetchGasStationsFromOverpass(south, west, north, east);
+
+        return ResponseEntity.ok("Requisição recebida! (" + south + "," + west + "," + north + "," + east + ")");
     }
 
 }

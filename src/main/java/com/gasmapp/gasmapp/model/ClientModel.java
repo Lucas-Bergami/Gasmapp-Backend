@@ -1,5 +1,6 @@
 package com.gasmapp.gasmapp.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,9 +28,11 @@ public class ClientModel {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<EvaluationModel> evaluations = new ArrayList<>();
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "client-prices")
     private List<PriceModel> prices = new ArrayList<>();
 
     public ClientModel() {

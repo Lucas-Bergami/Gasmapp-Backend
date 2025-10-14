@@ -1,6 +1,7 @@
 package com.gasmapp.gasmapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class FuelModel {
     private GasStationModel gasStation;
 
     @OneToMany(mappedBy = "fuel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "fuel-prices")
     private List<PriceModel> prices = new ArrayList<>();
 
     public FuelModel() {

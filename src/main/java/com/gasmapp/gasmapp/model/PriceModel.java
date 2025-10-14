@@ -1,5 +1,6 @@
 package com.gasmapp.gasmapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -22,12 +23,12 @@ public class PriceModel {
 
     @ManyToOne
     @JoinColumn(name = "fuel_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference(value = "fuel-prices")
     private FuelModel fuel;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference(value = "client-prices")
     private ClientModel client;
 
     public PriceModel() {
