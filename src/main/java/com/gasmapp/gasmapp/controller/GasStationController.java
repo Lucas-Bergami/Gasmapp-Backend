@@ -23,6 +23,27 @@ public class GasStationController {
         return gasStationService.getAllGasStations();
     }
 
+    @GetMapping("/nearby")
+    public ResponseEntity<List<GasStationModel>> getNearbyGasStations(
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam(defaultValue = "0.01") double delta) {
+
+        double south = latitude - delta;
+        double north = latitude + delta;
+        double west = longitude - delta;
+        double east = longitude + delta;
+
+        List<GasStationModel> nearbyStations = gasStationService.getGasStationsInBoundingBox(south, west, north, east);
+
+        if (nearbyStations.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(nearbyStations);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<GasStationModel> getGasStationById(@PathVariable Long id) {
         Optional<GasStationModel> station = gasStationService.getGasStationById(id);

@@ -124,4 +124,8 @@ public class GasStationService {
             e.printStackTrace();
         }
     }
+
+    public List<GasStationModel> getGasStationsInBoundingBox(double south, double west, double north, double east) {
+        return gasStationRepository.findByLatitudeBetweenAndLongitudeBetween(south, north, west, east);
+    }
 }
