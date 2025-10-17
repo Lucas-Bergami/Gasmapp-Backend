@@ -31,6 +31,9 @@ public class PriceModel {
     @JsonBackReference(value = "client-prices")
     private ClientModel client;
 
+    @OneToMany(mappedBy = "price", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EvaluationModel> evaluations = new ArrayList<>();
+
     public PriceModel() {
         this.createdAt = LocalDateTime.now();
     }

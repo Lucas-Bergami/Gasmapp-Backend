@@ -1,5 +1,6 @@
 package com.gasmapp.gasmapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -23,7 +24,7 @@ public class FuelModel {
 
     @ManyToOne
     @JoinColumn(name = "gas_station_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private GasStationModel gasStation;
 
     @OneToMany(mappedBy = "fuel", cascade = CascadeType.ALL, orphanRemoval = true)
