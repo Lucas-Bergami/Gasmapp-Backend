@@ -123,4 +123,24 @@ public class GasStationController {
         return ResponseEntity.ok("Requisição recebida! (" + south + "," + west + "," + north + "," + east + ")");
     }
 
+    @GetMapping("/cheapest")
+    public ResponseEntity<GasStationModel> getCheapestGasStation(
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam String fuelType,
+            @RequestParam(defaultValue = "0.01") double delta) {
+
+        double south = latitude - delta;
+        double north = latitude + delta;
+        double west = longitude - delta;
+        double east = longitude + delta;
+
+        Optional<GasStationModel> cheapest = gasStationService.findCheapestGasStationInBoundingBox(
+                south, west, north, east, fuelType.toUpperCase()
+        );
+
+        return cheapest.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
 }

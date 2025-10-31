@@ -2,7 +2,9 @@ package com.gasmapp.gasmapp.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gasmapp.gasmapp.model.FuelModel;
 import com.gasmapp.gasmapp.model.GasStationModel;
+import com.gasmapp.gasmapp.model.PriceModel;
 import com.gasmapp.gasmapp.repository.GasStationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -15,10 +17,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class GasStationService {
@@ -127,5 +127,29 @@ public class GasStationService {
 
     public List<GasStationModel> getGasStationsInBoundingBox(double south, double west, double north, double east) {
         return gasStationRepository.findByLatitudeBetweenAndLongitudeBetween(south, north, west, east);
+    }
+
+    public Optional<GasStationModel> findCheapestGasStationInBoundingBox(
+            double south, double west, double north, double east, String fuelTypeStr) {
+
+        FuelModel.FuelType fuelType;
+        try {
+            fuelType = FuelModel.FuelType.valueOf(fuelTypeStr);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+
+        List<GasStationModel> stations = gasStationRepository.findByLatitudeBetweenAndLongitudeBetween(
+                south, north, west, east);
+
+        return stations.stream()
+                .flatMap(station -> station.getFuels().stream()
+                        .filter(fuel -> fuel.getName() == fuelType)
+                        .flatMap(fuel -> fuel.getPrices().stream()
+                                .max(Comparator.comparing(PriceModel::getCreatedAt))
+                                .stream()
+                                .map(latestPrice -> Map.entry(station, latestPrice))))
+                .min(Comparator.comparingDouble(entry -> entry.getValue().getPrice()))
+                .map(Map.Entry::getKey);
     }
 }

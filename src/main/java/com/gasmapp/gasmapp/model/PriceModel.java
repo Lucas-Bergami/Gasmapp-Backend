@@ -53,4 +53,7 @@ public class PriceModel {
     public ClientModel getClient() { return client; }
     public void setClient(ClientModel client) { this.client = client; }
 
+    public double getValue() {
+        return price;
+    }
 }
