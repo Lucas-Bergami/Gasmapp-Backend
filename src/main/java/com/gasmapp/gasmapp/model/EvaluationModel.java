@@ -1,12 +1,14 @@
 package com.gasmapp.gasmapp.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "evaluations")
+@Table(
+        name = "evaluations",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"price_id", "client_id"})
+)
 public class EvaluationModel {
 
     @Id
@@ -14,7 +16,7 @@ public class EvaluationModel {
     private Long id;
 
     @Column(nullable = false)
-    private Integer evaluation;
+    private Boolean evaluation;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -35,8 +37,8 @@ public class EvaluationModel {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Integer getEvaluation() { return evaluation; }
-    public void setEvaluation(Integer evaluation) { this.evaluation = evaluation; }
+    public Boolean getEvaluation() { return evaluation; }
+    public void setEvaluation(Boolean evaluation) { this.evaluation = evaluation; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
