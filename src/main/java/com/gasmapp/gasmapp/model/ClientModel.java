@@ -20,9 +20,11 @@ public class ClientModel {
     @Column(nullable = false, unique = true)
     private String email;
 
-    //auth0????
-    @Column(nullable = false)
-    private String password;
+    @Column(name = "provider_id", nullable = false, unique = true)
+    private String providerId;
+
+    @Column(name = "keycloak_id", unique = true)
+    private String keycloakId;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -39,28 +41,69 @@ public class ClientModel {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Getters e Setters ----------------------------------------
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getName() {
+        return name;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    public String getKeycloakId() {
+        return keycloakId;
+    }
+
+    public void setKeycloakId(String keycloakId) {
+        this.keycloakId = keycloakId;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public List<EvaluationModel> getEvaluations() {
         return evaluations;
+    }
+
+    public void setEvaluations(List<EvaluationModel> evaluations) {
+        this.evaluations = evaluations;
     }
 
     public List<PriceModel> getPrices() {
         return prices;
     }
 
+    public void setPrices(List<PriceModel> prices) {
+        this.prices = prices;
+    }
 }
