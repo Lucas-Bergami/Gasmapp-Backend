@@ -41,8 +41,7 @@ public class ClientController {
         return clientRepository.findById(id).map(client -> {
             client.setName(updatedClient.getName());
             client.setEmail(updatedClient.getEmail());
-            client.setProviderId(updatedClient.getProviderId());
-            client.setKeycloakId(updatedClient.getKeycloakId());
+            client.setPassword(updatedClient.getPassword());
             ClientModel saved = clientRepository.save(client);
             return ResponseEntity.ok(saved);
         }).orElseGet(() -> ResponseEntity.notFound().build());
@@ -51,14 +50,12 @@ public class ClientController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
         Optional<ClientModel> clientOpt = clientRepository.findById(id);
-        if (clientOpt.isPresent()) {
-            clientRepository.delete(clientOpt.get());
+        if (clientOpt.isPresent()) { clientRepository.delete(clientOpt.get());
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        else { return ResponseEntity.notFound().build(); }
     }
-
+    
     @GetMapping("/{id}/evaluations")
     public ResponseEntity<List<EvaluationModel>> getEvaluationsByClient(@PathVariable Long id) {
         return clientRepository.findById(id)

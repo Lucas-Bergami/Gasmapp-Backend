@@ -3,6 +3,7 @@ package com.gasmapp.gasmapp.service;
 import com.gasmapp.gasmapp.model.ClientModel;
 import com.gasmapp.gasmapp.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +15,11 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public ClientModel createClient(ClientModel client) {
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
         return clientRepository.save(client);
     }
 
@@ -22,8 +27,11 @@ public class ClientService {
         return clientRepository.findById(id).map(client -> {
             client.setName(updatedClient.getName());
             client.setEmail(updatedClient.getEmail());
-            client.setProviderId(updatedClient.getProviderId());
-            client.setKeycloakId(updatedClient.getKeycloakId());
+
+            if (updatedClient.getPassword() != null && !updatedClient.getPassword().isEmpty()) {
+                client.setPassword(passwordEncoder.encode(updatedClient.getPassword()));
+            }
+
             return clientRepository.save(client);
         });
     }
