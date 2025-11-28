@@ -6,6 +6,7 @@ import com.gasmapp.gasmapp.model.PriceModel;
 import com.gasmapp.gasmapp.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,9 @@ public class ClientController {
 
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public List<ClientModel> getAllClients() {
@@ -31,8 +35,37 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientModel> createClient(@RequestBody ClientModel client) {
+    public ResponseEntity<?> createClient(@RequestBody ClientModel client) {
+
+        if (client.getName() == null || client.getName().isBlank()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Name is required");
+        }
+
+        if (client.getEmail() == null || client.getEmail().isBlank()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Email is required");
+        }
+
+        if (client.getPassword() == null || client.getPassword().isBlank()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Password is required");
+        }
+
+        if (clientRepository.findByEmail(client.getEmail()).isPresent()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Client with this email already exists");
+        }
+
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
+        client.setRole("CLIENT");
+
         ClientModel savedClient = clientRepository.save(client);
+
         return ResponseEntity.status(201).body(savedClient);
     }
 

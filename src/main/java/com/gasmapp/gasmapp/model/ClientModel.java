@@ -1,5 +1,6 @@
 package com.gasmapp.gasmapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -20,9 +21,12 @@ public class ClientModel {
     @Column(nullable = false, unique = true)
     private String email;
 
-    //auth0????
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String role;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -63,4 +67,7 @@ public class ClientModel {
         return prices;
     }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
 }
