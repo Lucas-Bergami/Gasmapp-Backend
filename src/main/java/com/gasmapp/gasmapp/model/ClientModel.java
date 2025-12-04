@@ -21,7 +21,6 @@ public class ClientModel {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
@@ -69,5 +68,9 @@ public class ClientModel {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getRole() {
+        return role;
     }
 }
