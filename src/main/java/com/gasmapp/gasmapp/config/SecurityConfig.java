@@ -36,13 +36,13 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/login").permitAll()
+                .requestMatchers("/auth/me").hasAnyRole("CLIENT", "ADMIN")
                 .requestMatchers(HttpMethod.POST, "/clients").permitAll()
-
                 .requestMatchers("/clients/**").hasAnyRole("CLIENT", "ADMIN")
-
-                .anyRequest().hasRole("ADMIN")
+                .requestMatchers("/prices/**").permitAll()
+                .requestMatchers("/fuels/**").permitAll()
+                .anyRequest().permitAll()
         );
-
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
